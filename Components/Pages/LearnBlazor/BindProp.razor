@@ -3,14 +3,51 @@
 <h3>Product - data binding</h3>
 
 Name : @Product.Name  <br/>
-IsActive : @Product.IsActive
+This product is  : @(Product.IsActive? "Active" : "Inactive")
 
+<br />
+Price : @Product.Price
+<br />
+Input Price :
+<input type="number" @bind="@Product.Price" @bind:event="oninput"/> <br/>
+
+
+
+IsActive :
+<input type="checkbox" @bind-value="@Product.IsActive"/>
+<br />
+<br />
+
+Selected Property : 
+<select @bind="selectedProp">
+    @foreach(var prop in Product.ProductProperties)
+    {
+        <option value="@prop.Key">@prop.Key</option>
+    }
+</select>
+<br />
+
+@if (!string.IsNullOrEmpty(selectedProp))
+{
+    var selected = Product.ProductProperties.FirstOrDefault(u => u.Key == selectedProp);
+    <p>Selected Value : @(selected != null ? selected.Value : "Not found")</p>
+}
 
 
 @code {
+    private string selectedProp = "";
+
     Models.Product Product = new()
     {
         Name = "Apple",
         IsActive = true,
+        Price = 5,
+        ProductProperties= new List<Models.Product_Prop>()
+        {
+            new Models.Product_Prop{Id=1, Key="Color", Value="Red" },
+            new Models.Product_Prop{Id=2, Key="Size", Value="cm" },
+            new Models.Product_Prop{Id=3, Key="Flavor", Value="Violet" },
+
+        }
     };
 }
