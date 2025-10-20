@@ -1,0 +1,43 @@
+﻿<div class="col">
+    <div class="card h-500 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Product - @prod.Id</h4>
+
+            <input type="checkbox" @onchange="FavouriteUpdated"/>Add to Favorites <br />
+
+            <p class="card-text">Name - @prod.Name</p>
+
+            <p>
+                Show Properties:
+                <input type="checkbox" @bind="@prod.IsActive" />
+            </p>
+
+            @if (prod.IsActive && prod.ProductProperties != null)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var prop in prod.ProductProperties)
+                    {
+                        <li class="list-group-item">@prop.Key - @prop.Value</li>
+                    }
+                </ul>
+            }
+        </div>
+
+    </div>
+    <_DeleteButtonComponent ProductId="@prod.Id"></_DeleteButtonComponent>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<bool> OnFavouriteUpdated { get; set; }
+
+    [Parameter]
+    public Product prod { get; set; }
+
+    private async Task FavouriteUpdated(ChangeEventArgs args)
+    {
+        await OnFavouriteUpdated.InvokeAsync((bool)args.Value);
+    }
+
+}
