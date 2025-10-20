@@ -1,6 +1,6 @@
 ﻿<div class="col">
     <div class="card h-500 shadow-sm">
-        <div class="card-body">
+        <div class="card-body" @onclick="ProductSelected">
             <h4 class="card-title">Product - @prod.Id</h4>
 
             <input type="checkbox" @onchange="FavouriteUpdated"/>Add to Favorites <br />
@@ -30,6 +30,9 @@
 @code {
 
     [Parameter]
+    public EventCallback<string> OnSelectedProduct { get; set; }
+
+    [Parameter]
     public EventCallback<bool> OnFavouriteUpdated { get; set; }
 
     [Parameter]
@@ -38,6 +41,15 @@
     private async Task FavouriteUpdated(ChangeEventArgs args)
     {
         await OnFavouriteUpdated.InvokeAsync((bool)args.Value);
+    }
+
+    private async Task ProductSelected()
+    {
+        if (prod == null) return;
+        if (OnSelectedProduct.HasDelegate)
+        {
+            await OnSelectedProduct.InvokeAsync(prod.Name);
+        }
     }
 
 }
